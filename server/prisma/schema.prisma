@@ -38,6 +38,7 @@ model Customer {
   id        String   @id @default(cuid())
   lastName  String?
   orders    Order[]
+  password  String?
   phone     String?
   updatedAt DateTime @updatedAt
 }

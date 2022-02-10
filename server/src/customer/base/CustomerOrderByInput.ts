@@ -70,6 +70,15 @@ class CustomerOrderByInput {
   @Field(() => SortOrder, {
     nullable: true,
   })
+  password?: SortOrder;
+
+  @ApiProperty({
+    required: false,
+    enum: ["Asc", "Desc"],
+  })
+  @Field(() => SortOrder, {
+    nullable: true,
+  })
   phone?: SortOrder;
 
   @ApiProperty({
