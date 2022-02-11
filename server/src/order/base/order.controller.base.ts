@@ -19,6 +19,7 @@ import { isRecordNotFoundError } from "../../prisma.util";
 import * as errors from "../../errors";
 import { Request } from "express";
 import { plainToClass } from "class-transformer";
+import { ApiNestedQuery } from "../../decorators/api-nested-query.decorator";
 import { OrderService } from "../order.service";
 import { OrderCreateInput } from "./OrderCreateInput";
 import { OrderWhereInput } from "./OrderWhereInput";
@@ -122,11 +123,7 @@ export class OrderControllerBase {
   })
   @swagger.ApiOkResponse({ type: [Order] })
   @swagger.ApiForbiddenResponse()
-  @swagger.ApiQuery({
-    type: () => OrderFindManyArgs,
-    style: "deepObject",
-    explode: true,
-  })
+  @ApiNestedQuery(OrderFindManyArgs)
   async findMany(
     @common.Req() request: Request,
     @nestAccessControl.UserRoles() userRoles: string[]
