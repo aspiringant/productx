@@ -19,6 +19,7 @@ import { isRecordNotFoundError } from "../../prisma.util";
 import * as errors from "../../errors";
 import { Request } from "express";
 import { plainToClass } from "class-transformer";
+import { ApiNestedQuery } from "../../decorators/api-nested-query.decorator";
 import { ProductService } from "../product.service";
 import { ProductCreateInput } from "./ProductCreateInput";
 import { ProductWhereInput } from "./ProductWhereInput";
@@ -26,7 +27,7 @@ import { ProductWhereUniqueInput } from "./ProductWhereUniqueInput";
 import { ProductFindManyArgs } from "./ProductFindManyArgs";
 import { ProductUpdateInput } from "./ProductUpdateInput";
 import { Product } from "./Product";
-import { OrderWhereInput } from "../../order/base/OrderWhereInput";
+import { OrderFindManyArgs } from "../../order/base/OrderFindManyArgs";
 import { Order } from "../../order/base/Order";
 @swagger.ApiBearerAuth()
 export class ProductControllerBase {
@@ -96,11 +97,7 @@ export class ProductControllerBase {
   })
   @swagger.ApiOkResponse({ type: [Product] })
   @swagger.ApiForbiddenResponse()
-  @swagger.ApiQuery({
-    type: () => ProductFindManyArgs,
-    style: "deepObject",
-    explode: true,
-  })
+  @ApiNestedQuery(ProductFindManyArgs)
   async findMany(
     @common.Req() request: Request,
     @nestAccessControl.UserRoles() userRoles: string[]
@@ -281,17 +278,13 @@ export class ProductControllerBase {
     action: "read",
     possession: "any",
   })
-  @swagger.ApiQuery({
-    type: () => OrderWhereInput,
-    style: "deepObject",
-    explode: true,
-  })
+  @ApiNestedQuery(OrderFindManyArgs)
   async findManyOrders(
     @common.Req() request: Request,
     @common.Param() params: ProductWhereUniqueInput,
     @nestAccessControl.UserRoles() userRoles: string[]
   ): Promise<Order[]> {
-    const query: OrderWhereInput = request.query;
+    const query = plainToClass(OrderFindManyArgs, request.query);
     const permission = this.rolesBuilder.permission({
       role: userRoles,
       action: "read",
@@ -299,7 +292,7 @@ export class ProductControllerBase {
       resource: "Order",
     });
     const results = await this.service.findOrders(params.id, {
-      where: query,
+      ...query,
       select: {
         createdAt: true,
 
@@ -323,6 +316,11 @@ export class ProductControllerBase {
         updatedAt: true,
       },
     });
+    if (results === null) {
+      throw new errors.NotFoundException(
+        `No resource was found for ${JSON.stringify(params)}`
+      );
+    }
     return results.map((result) => permission.filter(result));
   }
 

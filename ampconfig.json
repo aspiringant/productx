@@ -3,14 +3,14 @@
   "appInfo": {
     "name": "ProductX",
     "description": "“Product X” plans to provide smarter access to digital assets via secure, transparent and low-cost exposure. Built by experts at Tykhe with decades of investment experience, the fund takes a fiduciary-minded approach to product construction, offering a simple (No wallet, No key) and cost-effective way to invest in this cryptocurrency market.",
-    "version": "uhey9ebf",
+    "version": "qvt1nscu",
     "id": "ckze31wmm95963001s6zm3sn05m",
     "url": "https://app.amplication.com/ckze31wmm95963001s6zm3sn05m",
     "settings": {
       "dbHost": "localhost",
       "dbName": "",
       "dbPassword": "admin",
-      "dbPort": 5432,
+      "dbPort": 5433,
       "dbUser": "admin",
       "appId": "ckze31wmm95963001s6zm3sn05m",
       "authProvider": "Jwt"
